@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script>
+        //const API_BASE_URL = "http://127.0.0.1:8000";  // Your backend API URL
+        const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";
+
+        // Immediately Invoked Function Expression (IIFE)
+        (async () => {
+            
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/verify-token`, {
+                    method: "GET",
+                    credentials: "include", // Include cookies
+                });
+
+                if (!response.ok) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!data.isAdmin) {  
+                    window.location.href = "landing.html";
+                    return;
+                }
+                console.log("laoding admin page content")
+                loadAdminPageContent();
+
+            } catch (error) {
+                console.error("Error validating token:", error);
+                window.location.href = "login.html";
+            }
+        })(); // IIFE ends here
+
+    </script>
+
+</head>
+
+<body>
+    <div id="adminContent"></div>
+    <script src="./lang/en/user.js"></script>
+    <script src="./scripts/admin.js"></script>
+</body>
+
+</html>
