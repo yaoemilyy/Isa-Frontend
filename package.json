@@ -66,7 +66,6 @@
     "fragment-cache": "^0.2.1",
     "fresh": "^0.5.2",
     "from": "^0.1.7",
-    "fsevents": "^1.2.13",
     "function-bind": "^1.1.2",
     "get-intrinsic": "^1.2.4",
     "get-value": "^2.0.6",
@@ -196,7 +195,6 @@
     "websocket-extensions": "^0.1.4",
     "whatwg-encoding": "^2.0.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
