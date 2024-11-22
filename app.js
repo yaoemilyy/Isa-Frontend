@@ -1,7 +1,5 @@
-
-// waiting for the backend endpoints to be created
-const API_BASE_URL = "http://127.0.0.1:8000";  // Base URL for the backend API
-//const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // Base URL for the backend API
+//const API_BASE_URL = "http://127.0.0.1:8000";                    // in dev branch for testing
+const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app";  // in main branch for deployment
 
 // Handle Login
 const loginForm = document.getElementById("loginForm");
@@ -20,10 +18,12 @@ if (loginForm) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
                 credentials: "include", // Include cookies in the request
                 body: JSON.stringify({ email, password })
             });
+
 
             const data = await response.json();
 
@@ -38,6 +38,7 @@ if (loginForm) {
             } else {
                 window.location.href = "landing.html";
             }
+
         } catch (error) {
             loginMessage.style.color = "red";
             loginMessage.textContent = error.message;
@@ -63,6 +64,7 @@ if (registerForm) {  // Only add event listener if the registration form exists 
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify({ first_name: firstName, email, password }),
             });
@@ -157,23 +159,4 @@ if (resetForm) {  // Only add event listener if the reset password form exists o
             console.error("Error:", error);
         }
     });
-}
-
-// Check if user is logged in when a page loads (verifyToken function inside a DOMContentLoaded event listener)
-async function verifyToken() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/verify-token`, {
-            method: "GET",
-            credentials: "include" // Include cookies in the request
-        });
-
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.detail || "Token verification failed");
-        
-        console.log("Token is valid:", data);
-        return data;
-    } catch (error) {
-        console.error("Error verifying token:", error);
-        return null;
-    }
 }
