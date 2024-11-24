@@ -4,14 +4,13 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "frontend": "live-server --port=5500"
+    "start": "http-server ./ -p $PORT"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
+  "dependencies": {
+    "http-server": "^14.1.1"
   }
 }
+
