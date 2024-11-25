@@ -27,15 +27,15 @@ function loadAdminPageContent(){
 //gets the endpoints data from endpoints table 
 async function loadEndpointStats() {
     try {
-        const endpointStatsResponse = await fetch(`${API_BASE_URL}/stats/endpoints`, {
+        const endpointStatsResponse = await fetch(`${API_BASE_URL}/api/v1/stats/endpoints`, {
             method: "GET",
             credentials: "include",
             headers: { "Accept": "application/json" },
         });
 
         const endpointStats = await endpointStatsResponse.json();
-        console.log(endpointStats)
-        renderEndpointStats(endpointStats); //call render to display data
+        // console.log("endpoint stats:" + endpointStats)
+        renderEndpointStats(endpointStats["endpoints"]); //call render to display data
 
     } catch (error) {
         console.error("Error loading endpoint stats content:", error);
@@ -63,15 +63,15 @@ function renderEndpointStats(stats) {
 //gets the api usage data form api_usage table
 async function loadApiUsageStats(){
     try {
-        const apiUsageStatsResponse = await fetch(`${API_BASE_URL}/stats/apiUsage`, {
+        const apiUsageStatsResponse = await fetch(`${API_BASE_URL}/api/v1/stats/apiUsage`, {
             method: "GET",
             credentials: "include",
             headers: { "Accept": "application/json" },
         });
 
         const apiUsageStats = await apiUsageStatsResponse.json();
-        console.log(apiUsageStats);
-        renderApiUsageStats(apiUsageStats);  // Call render function to display the data
+        // console.log(apiUsageStats["users"]);
+        renderApiUsageStats(apiUsageStats["users"]);  // Call render function to display the data
 
     } catch (error) {
         console.error("Error loading API usage stats content:", error);

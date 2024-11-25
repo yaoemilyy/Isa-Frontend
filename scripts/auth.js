@@ -1,5 +1,3 @@
-// auth.js
-// const API_BASE_URL = "http://127.0.0.1:8000"; // For local testing
 const API_BASE_URL = "https://coral-app-3m7bi.ondigitalocean.app"; // For production
 
 class Auth {
@@ -23,7 +21,7 @@ class Auth {
         console.log("Logout initiated");
         
         try {
-            const response = await fetch(`${API_BASE_URL}/logout`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/logout`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -37,48 +35,51 @@ class Auth {
                 window.location.href = "login.html";
             } else {
                 console.error("Logout failed:", response.statusText);
-                alert("Logout failed. Please try again.");
+                alert(messages.logoutFailure);
             }
         } catch (error) {
             console.error("Error during logout:", error);
-            alert("An error occurred during logout. Please try again.");
+            logoutError(messages.logoutError);
         }
     }
 
     // Verify token and handle routing based on user role
     async verifyTokenAndRoute(requiredRole = null) {
         try {
-            const response = await fetch(`${API_BASE_URL}/verify-token`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/verify-token`, {
                 method: "GET",
                 credentials: "include",
                 headers: {
                     "Accept": "application/json"
                 }
             });
-
+    
             if (!response.ok) {
                 console.log("Token verification failed");
                 window.location.href = "login.html";
                 return null;
             }
-
+    
             const userData = await response.json();
             console.log("User data:", userData);
-
+    
             // Handle admin-only pages
             if (requiredRole === 'admin' && !userData.isAdmin) {
                 console.log("Admin access required but user is not admin");
                 window.location.href = "landing.html";
                 return null;
             }
-
-            // Handle regular user pages
+    
+            // Allow admins to access shared pages like profile.html
             if (requiredRole === 'user' && userData.isAdmin) {
-                console.log("User is admin, redirecting to admin page");
-                window.location.href = "admin.html";
-                return null;
+                const currentPage = window.location.pathname.split("/").pop();
+                if (currentPage !== "profile.html") {
+                    console.log("User is admin, redirecting to admin page");
+                    window.location.href = "admin.html";
+                    return null;
+                }
             }
-
+    
             return userData;
         } catch (error) {
             console.error("Error during token verification:", error);
@@ -86,10 +87,11 @@ class Auth {
             return null;
         }
     }
+    
 
     async deleteAccount() {
         try {
-            const response = await fetch(`${API_BASE_URL}/delete-account`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/delete-account`, {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -103,12 +105,12 @@ class Auth {
                 return true;
             } else {
                 console.error("Failed to delete account:", response.statusText);
-                alert("Failed to delete account. Please try again.");
+                alert(messages.deleteAccountFailure);
                 return false;
             }
         } catch (error) {
             console.error("Error deleting account:", error);
-            alert("An error occurred while deleting your account. Please try again.");
+            alert(messages.deleteAccountError);
             return false;
         }
     }
@@ -116,7 +118,7 @@ class Auth {
 
     async updateName(newName) {
         try {
-            const response = await fetch(`${API_BASE_URL}/update-name`, {
+            const response = await fetch(`${API_BASE_URL}/api/v1/update-name`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
@@ -129,24 +131,21 @@ class Auth {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data.message);
-                alert("Name updated successfully!");
                 return true;
             } else {
                 const error = await response.json();
                 console.error("Failed to update name:", error.detail);
-                alert(`Error updating name: ${error.detail}`);
+                alert(messages.updateNameErrorDetail(error.detail));
                 return false;
             }
         } catch (error) {
             console.error("Error during name update:", error);
-            alert("An error occurred. Please try again.");
+            alert(messages.genericError);
             return false;
         }
     }
     
 }
-
-
 
 // Create and export a single instance
 const auth = new Auth();
